@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Lista de Checkbox</title>
+  <style>
+    .completed {
+      color: green;
+      font-weight: bold;
+    }
+    label {
+  display: block;
+}
+  </style>
+</head>
+
+<body>
+  <h1>Lista de Checkbox</h1>
+
+  <div id="categories"></div>
+
+  <script>
+    // Define as categorias e seus respectivos itens
+    let data = [
+      {
+        category: 'Comida',
+        items: [
+          { name: 'Maçã', checked: false },
+          { name: 'sal', checked: false },
+          { name: 'açúcar', checked: false },
+          { name: 'óleo', checked: false },
+          { name: 'azeite', checked: false },
+          { name: 'café', checked: false },
+          { name: 'tapioca', checked: false },
+          { name: 'filtro de café', checked: false },
+          { name: 'café', checked: false },
+          { name: 'macarrão', checked: false },
+          { name: 'molho de tomate', checked: false },
+          { name: 'feijão', checked: false },
+          { name: 'arroz', checked: false },
+          { name: 'carnes', checked: false },
+          { name: 'atum em lata', checked: false },
+          { name: 'leite', checked: false },
+          { name: 'ovo', checked: false },
+          { name: 'temperos', checked: false },
+          { name: 'cebola', checked: false },
+          { name: 'alho', checked: false },
+          { name: 'couve', checked: false },
+          { name: 'frutas', checked: false },
+          { name: 'batata', checked: false },
+          { name: 'legumes em geral', checked: false },
+          { name: 'pão', checked: false },
+          { name: 'frios', checked: false },
+          { name: 'manteiga', checked: false },
+          { name: 'bolacha', checked: false },
+          { name: 'água se não tiver filtro la', checked: false },
+        ]
+      },
+      {
+        category: 'utilidades',
+        items: [
+
+          { name: 'fósforo', checked: false },
+          { name: 'vela', checked: false },
+          { name: 'inseticida', checked: false },
+          { name: 'papel toalha', checked: false },
+          { name: 'pregador?', checked: false },
+          { name: 'pote pra guardas as coisas', checked: false },
+          { name: 'panela', checked: false },
+          { name: 'prato', checked: false },
+          { name: 'garfo faca colher E talheres ', checked: false },
+          { name: 'copos', checked: false },
+          { name: 'tábua de corte', checked: false },
+          { name: 'roupa de cama?', checked: false },
+          { name: 'lixeira?', checked: false },
+          { name: 'toalha de rosto', checked: false },
+        ]
+      },
+      {
+        category: 'higiêne',
+        items: [
+          { name: 'papel higiënico ', checked: false },
+          { name: 'lenço umedecido', checked: false },
+          { name: 'fio dental', checked: false },
+          { name: 'pasta de dente', checked: false },
+          { name: 'xampu', checked: false },
+          { name: 'cotonete', checked: false },
+          { name: 'sabonete', checked: false },
+          { name: 'desodorante', checked: false },
+        ]
+      },
+      {
+        category: 'limpeza',
+        items: [
+          { name: 'pano de chão', checked: false },
+          { name: 'pane de prato', checked: false },
+          { name: 'rodinho de pia', checked: false },
+          { name: 'vassoura', checked: false },
+          { name: 'balde', checked: false },
+          { name: 'pazinha', checked: false },
+          { name: 'bucha de louça', checked: false },
+          { name: 'candida ', checked: false },
+          { name: 'detergente', checked: false },
+          { name: 'sabão em pó', checked: false },
+          { name: 'saco de lixo', checked: false },
+          { name: 'desentupidor', checked: false },
+          { name: 'escova de vaso', checked: false },
+          { name: 'amaciante', checked: false },
+          { name: 'desinfetante', checked: false },
+          { name: 'bombril', checked: false },
+          { name: 'alcool', checked: false },
+          { name: 'rodo', checked: false },
+        ]
+      }
+    ];
+
+    const categoriesDiv = document.getElementById('categories');
+
+    // Adiciona cada categoria na página
+    data.forEach(categoryData => {
+      const categoryDiv = document.createElement('div');
+      const categoryTitle = document.createElement('h2');
+      categoryTitle.textContent = categoryData.category;
+      categoryDiv.appendChild(categoryTitle);
+
+      // Adiciona cada item da categoria na página
+      categoryData.items.forEach(itemData => {
+        const itemLabel = document.createElement('label');
+        const itemCheckbox = document.createElement('input');
+        itemCheckbox.type = 'checkbox';
+        itemCheckbox.name = itemData.name;
+        itemCheckbox.checked = itemData.checked;
+        itemCheckbox.addEventListener('change', () => {
+          itemData.checked = itemCheckbox.checked;
+          updateLocalStorage();
+          updateCategoryCompletion(categoryDiv, categoryData);
+        });
+        itemLabel.appendChild(itemCheckbox);
+        itemLabel.appendChild(document.createTextNode(itemData.name));
+        categoryDiv.appendChild(itemLabel);
+      });
+
+      categoriesDiv.appendChild(categoryDiv);
+
+      // Verifica se a categoria está completa e adiciona a classe CSS apropriada
+      updateCategoryCompletion(categoryDiv, categoryData);
+    });
+
+    // Atualiza o local storage com os dados atuais
+    function updateLocalStorage() {
+      localStorage.setItem('data', JSON.stringify(data));
+    }
+
+    // Verifica se a categoria está completa e adiciona a classe CSS apropriada
+    function updateCategoryCompletion(categoryDiv, categoryData) {
+      const completed = categoryData.items.every(itemData => itemData.checked);
+      categoryDiv.classList.toggle('completed', completed);
+    }
+
+    // Carrega os dados do local storage e atualiza a página
+    const savedData = localStorage.getItem('data');
+    debugger
+    if (savedData) {
+      data = JSON.parse(savedData);
+      updatePage();
+    }
+
+    function updatePage() {
+      categoriesDiv.innerHTML = '';
+      data.forEach(categoryData => {
+        const categoryDiv = document.createElement('div');
+        const categoryTitle = document.createElement('h2');
+        categoryTitle.textContent = categoryData.category;
+        categoryDiv.appendChild(categoryTitle);
+
+        categoryData.items.forEach(itemData => {
+          const itemLabel = document.createElement('label');
+          const itemCheckbox = document.createElement('input');
+          itemCheckbox.type = 'checkbox';
+          'checkbox';
+          itemCheckbox.name = itemData.name;
+          itemCheckbox.checked = itemData.checked;
+          itemCheckbox.addEventListener('change', () => {
+            itemData.checked = itemCheckbox.checked;
+            updateLocalStorage();
+            updateCategoryCompletion(categoryDiv, categoryData);
+          });
+          itemLabel.appendChild(itemCheckbox);
+          itemLabel.appendChild(document.createTextNode(itemData.name));
+          categoryDiv.appendChild(itemLabel);
+        });
+        categoriesDiv.appendChild(categoryDiv);
+
+        updateCategoryCompletion(categoryDiv, categoryData);
+      });
+    }
+  </script>
